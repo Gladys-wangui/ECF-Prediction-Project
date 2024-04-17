@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EAST COAST FEVER PREDICTION SYSTEM</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.2/css/fontawesome.min.css">
+</head>
+<body>
+    <section class= "header">
+        <nav>
+            <div class = "nav-links" id="navlinks">
+                <i class="fa fa-times" onclick="hidemenu()" ></i>
+                <ul>
+                    <li><a href = "#">ABOUT</a></li>
+                    <li><a href = "#">DIAGNOSE</a></li>
+                    <li><a href = "#">MAPS</a></li>
+                    <li><a href = "#">VET LOCATOR</a></li>
+                    <li><a href = "#">PREVENTIVE MEASURES</a></li>
+                    <li><a href = "#">RESOURCES</a></li>
+                </ul>
+            </div>
+            </div>
+            <i class="fa fa-bars" onclick="showmenu()"></i>
+        </nav>
+        <div class="container">
+            <div class="profile">
+                <img src="animal.png" alt="ECF">
+                <h1>EAST COAST FEVER PREDICTION SYSTEM</h1>
+                <p>Safeguarding Livestock Health, One Prediction at a Time</p>
+                <button class="btn" id="diagnose-btn">DIAGNOSE</button>
+                <div id="documents-container"></div>
+            <!--<div class = "text-box">
+                <hi>EAST COAST FEVER PREDICTION SYSTEM</hi>
+                <P>Know your cattle's ECF status today</P>
+                <a href="" class="hero-btn">MORE</a>
+            </div>-->
+        </div>
+    </section>
+
+    <section class="about">
+        <h1> EAST COAST FEVER</h1>
+        <p>ECF is a disease of cattle and domestic buffalo caused by T. parva (family Theileridae), an intracellular protozoan parasite. The disease, which has been known from East Africa since the 19th century, is widespread in central and southern Africa as well.</p>
+        <div class="row">
+            <div class="about-col">
+                <h3>Background</h3>
+                <p>East Coast Fever (ECF), caused by the protozoan parasite Theileria parva and transmitted through infected ticks, is a major cattle disease with a significant impact on livestock health and the agricultural economy, particularly in East Africa. The disease not only threatens the livelihoods of cattle farmers but also jeopardizes food security in the region. ECF's lethality and rapid spread make it a severe concern, and early detection is critical for disease management and prevention. </p>
+
+            </div>
+            <div class="about-col">
+                <h3>Treatment</h3>
+                <p>East Coast fever can be treated by injecting parvaquone and buparvaquone. It can also be treated by halofuginone, an anticoccidiosis drug administered by mouth. The treatment is more effective if administered early in the disease.</p>
+
+            </div>
+            <div class="about-col">
+                <h3>Control</h3>
+                <p>Tick control, vaccination and chemotherapy are the three main methods in the control of East Coast fever. Frequent dipping cattle in acaricide supported by movement control can prevent cattle and wild animals from straying into the control area and introducing infected ticks. </p>
+
+            </div>
+
+        </div>
+    </section>    
+    <section class="diagnose">
+        <h1>DIAGNOSIS</h1>
+        <p1>Check your cattles ECF status today </br> check the boxes with symptoms your animal is showing</p1>
+            <div class="form">
+                <form action="/predict" method="post">
+                    {% for symptom in symptoms_list %}
+                        <input type="checkbox" name="symptoms" value="{{ symptom }}"> {{ symptom }}<br>
+                    {% endfor %}
+                    <br>
+                    <button type="submit">Predict</button>
+                </form>
+                
+                <div id="result"></div>
+                
+                <script>
+                    var navlinks = document.getElementById("navlinks");
+                    function showmenu() {
+                        navlinks.style.right = "0";
+                    }
+                    function hidemenu() {
+                        navlinks.style.right = "-200";
+                    }
+                </script>
+                <!-- JavaScript for Predict button functionality -->
+                <script>
+                    function predict() {
+                        // Retrieve form data
+                        const formData = new FormData(document.getElementById('predictionForm'));
+            
+                        // Perform an AJAX request to Flask server for prediction
+                        fetch('/predict', {
+                            method: 'POST',
+                            body: formData,
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Display the prediction result
+                            const resultDiv = document.getElementById('result');
+                            resultDiv.innerHTML = `<h3>Prediction Result:</h3><p>${data.result}</p>`;
+                            resultDiv.classList.remove('error');
+                            resultDiv.classList.add(data.result.toLowerCase().includes('negative') ? 'negative' : 'positive');
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            const resultDiv = document.getElementById('result');
+                            resultDiv.innerHTML = `<h3>Error:</h3><p>Failed to fetch prediction result. Please try again later.</p>`;
+                            resultDiv.classList.remove('positive');
+                            resultDiv.classList.add('error');
+                        });
+                    }
+                </script>
+            </div>
+
+    <section>
+        <section class="maps">
+            <h1>MAPS</h1>
+            
+            <!-- Display map-related information using the JSON data -->
+            <div class="map-results">
+                <h2>Map Results</h2>
+                <ul>
+                    <!-- Loop through the "organic" array in the JSON data -->
+                    <script>
+                        const jsonData = {
+                            "organic": [                                                        
+                                {
+                                    "title": "Epidemiology of East Coast fever (Theileria parva infection) in Kenya",
+                                    "link": "https://parasitesandvectors.biomedcentral.com/articles/10.1186/1756-3305-5-194/tables/2",
+                                    "snippet": "Table 2 East coast fever prevalence, incidence and case-fatality rates from studies conducted in intensive/semi-intensive smallholder dairy systems in Kenya.",
+                                    "position": 1
+                                },                        
+                                {
+                                    "title": "(PDF) Epidemiology of East Coast fever (Theileria parva infection) in ...",
+                                    "link": "https://www.researchgate.net/publication/230835747_Epidemiology_of_East_Coast_fever_Theileria_parva_infection_in_Kenya_Past_present_and_the_future",
+                                    "snippet": "In this article, we review the epidemiology of East Coast fever (ECF), a tick-borne infection of cattle, in Kenya.",
+                                    "date": "Jan 10, 2024",
+                                    "position": 2
+                                },
+                                {
+                                    "title": "Epidemiology of East Coast fever (Theileria parva infection) in Kenya",
+                                    "link": "https://www.readcube.com/articles/10.1186%2F1756-3305-5-194",
+                                    "snippet": "In this article, we review the epidemiology of East Coast fever (ECF), a tick-borne infection of cattle, in Kenya. The major factors associated with ...",
+                                    "position": 3
+                                },           
+                            ],
+                            "peopleAlsoAsk": [
+                                {
+                                    "question": "What is East Coast fever in Kenya?",
+                                    "snippet": "East Coast fever, also known as theileriosis, is a disease of cattle which occurs in Africa and is caused by the protozoan parasite Theileria parva. The primary vector which spreads T. parva between cattle is a tick, Rhipicephalus appendiculatus.",
+                                    "title": "East Coast fever - Wikipedia",
+                                    "link": "https://en.wikipedia.org/wiki/East_Coast_fever"
+                                },
+                                {
+                                    "question": "What is the epidemiology of East Coast fever?",
+                                    "snippet": "Epidemiology. ECF is transmitted by ticks, acting as biological vectors. Theileria sporozoites are transmitted to animals through saliva of the feeding tick. Transmission can also occur via reused needles.",
+                                    "title": "East Coast Fever - GALVmed",
+                                    "link": "https://www.galvmed.org/livestock-and-diseases/livestock-diseases/east-coast-fever/"
+                                },
+                                {
+                                    "question": "What spreads East Coast fever?",
+                                    "snippet": "An important disease of cattle in East Africa is East coast fever (ECF) is caused by Theileria parva, a parasitic protozoan, which lives in the white blood cells (lymphocytes) and red blood cells of its mammalian host and which is transmitted by ticks (Rhipicephalus appendiculatus).",
+                                    "title": "East Coast Fever - an overview | ScienceDirect Topics",
+                                    "link": "https://www.sciencedirect.com/topics/agricultural-and-biological-sciences/east-coast-fever"
+                                },
+                                {
+                                    "question": "How much does ECF treatment cost in Kenya?",
+                                    "snippet": "Benefits of the vaccine In contrast, available curative drugs are very expensive and the cost of treatment for ECF is between Ksh 4,000 and 6,000.",
+                                    "title": "Groundbreaking progress in eradicating ECF in livestock",
+                                    "link": "https://www.standardmedia.co.ke/farmkenya/livestock/article/2001468205/groundbreaking-progress-in-eradicating-ecf-in-livestock"
+                                }
+                            ],
+                            "relatedSearches": [
+                                {
+                                "query": "Signs and symptoms of theileriosis"
+                                },
+                                {
+                                "query": "Tropical theileriosis"
+                                }
+                            ]
+                        };
+    
+                        // Loop through the "organic" array in the JSON data
+                        for (let i = 0; i < jsonData.organic.length; i++) {
+                            const result = jsonData.organic[i];
+                            document.write(`
+                                <li>
+                                    <h3>${result.title}</h3>
+                                    <p>Date: ${result.date}</p>
+                                    <p>${result.snippet}</p>
+                                    <a href="${result.link}" target="_blank">Read More</a>
+                                </li>
+                            `);
+                        }
+                    </script>
+                </ul>
+            </div>
+    
+            <!-- Display related searches -->
+            <div class="related-searches">
+                <h2>Related Searches</h2>
+                <ul>
+                    <!-- Use JavaScript to dynamically generate related searches content -->
+                    <script>
+                        // Loop through the "relatedSearches" array in the JSON data
+                        for (let i = 0; i < jsonData.relatedSearches.length; i++) {
+                            const query = jsonData.relatedSearches[i].query;
+                            document.write(`<li>${query}</li>`);
+                        }
+                    </script>
+                </ul>
+            </div>
+        </section>
+    </section>
+    <!------javascript for toggle menu-->>
+    <script>
+        // JavaScript function to show/hide menu
+        var navlinks = document.getElementById("navlinks");
+        function showmenu() {
+            navlinks.style.right = "0";
+        }
+        function hidemenu() {
+            navlinks.style.right = "-200";
+        }
+    </script>
+</body>
+</html>
